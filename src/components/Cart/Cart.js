@@ -12,7 +12,7 @@ const Cart = (props) => {
     ctx.removeItem(id);
   };
   const cartItemAddHandler = (item) => {
-    ctx.addItem({...item, count: 1});
+    ctx.addItem({ ...item, count: 1 });
   };
 
   const cartItems = (
@@ -33,6 +33,10 @@ const Cart = (props) => {
   const totalAmount = `$${ctx.totalAmount.toFixed(2)}`;
   const hasItems = ctx.items.length > 0;
 
+  const handleOrder = () => {
+    console.log("Ordering...");
+  };
+
   return (
     <Modal onBackdropClick={props.onClose}>
       {cartItems}
@@ -44,7 +48,11 @@ const Cart = (props) => {
         <button className={classes["button--alt"]} onClick={props.onClose}>
           Close
         </button>
-        {hasItems && <button className={classes.button}>Order</button>}
+        {hasItems && (
+          <button className={classes.button} onClick={handleOrder}>
+            Order
+          </button>
+        )}
       </div>
     </Modal>
   );
