@@ -8,16 +8,42 @@ const defaultCartState = {
 
 const cartReducer = (state, action) => {
   if (action.type === "ADD_ITEM") {
-    const updatedItems = state.items.concat(action.item);
     const updatedTotalAmount =
       state.totalAmount + action.item.price * action.item.count;
+
+    const existingDish = state.items.find((dish) => dish.id === action.item.id);
+
+    let updatedItems = state.items;
+    if (existingDish) {
+      existingDish.count += action.item.count;
+      updatedItems = [...state.items]
+    } else {
+      updatedItems = state.items.concat(action.item);
+    }
+
     return {
       items: updatedItems,
       totalAmount: updatedTotalAmount,
     };
   } else if (action.type === "REMOVE_ITEM") {
+    const existingDish = state.items.find((dish) => dish.id === action.id);
+
+    let updatedItems;
+    if (existingDish) {
+      existingDish.count -= 1;
+      if (existingDish.count === 0) {
+        updatedItems = state.items.filter((dish) => {
+          return dish.id !== action.id;
+        });
+      }
+      return {
+        items: updatedItems,
+        totalAmount: state.totalAmount - existingDish.price,
+      };
+    } else {
+      return state;
+    }
   }
-  return defaultCartState;
 };
 
 const CartProvider = (props) => {
